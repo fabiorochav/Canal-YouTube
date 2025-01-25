@@ -15,7 +15,6 @@ library(sidrar)
 
 ```
 
-
 ```{r, message=FALSE, warning=FALSE}
 
 indice_envelhecimento_estado = get_sidra(api="/t/9756/n3/all/v/9175/p/last%201/c86/95251/d/v9175%202") %>%
