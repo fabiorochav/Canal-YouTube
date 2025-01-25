@@ -1,0 +1,56 @@
+---
+title: ""
+author: "Fábio Rocha"
+date: "`r Sys.Date()`"
+output: pdf_document
+---
+
+
+```{r, message=FALSE, warning=FALSE}
+
+library(tidyverse)
+library(geobr)
+library(sf)
+library(sidrar)
+
+```
+
+
+```{r, message=FALSE, warning=FALSE}
+
+indice_envelhecimento_estado = get_sidra(api="/t/9756/n3/all/v/9175/p/last%201/c86/95251/d/v9175%202") %>%
+  select("estado" = `Unidade da Federação`,
+         "code_estado" = `Unidade da Federação (Código)`,
+         Valor)
+
+```
+
+```{r}
+
+br_map_estado <- read_state(code_state = "all", year = 2020)
+br_map_estado$code_state = as.character(br_map_estado$code_state)
+
+# Juntar dados
+dados_totais = left_join(br_map_estado, indice_envelhecimento_estado,
+                          by = c("code_state" = "code_estado"))
+
+```
+
+```{r, fig.height=7, fig.width=10}
+
+ggplot() +
+  geom_sf(data = dados_totais, aes(fill = Valor), color = "white") +
+  scale_fill_gradient(low = "#ff8c00", high = "#0055ff", name = "IE") +
+  geom_sf_label(data = dados_totais, aes(label = round(Valor, 2)), 
+                label.padding = unit(0.5, "mm"), size = 3) +
+  theme_minimal() +
+  labs(title = "Indice de envelhecimento por estado - Censo 2022",
+       subtitle = "O índice de envelhecimento (IE), representa o número de pessoas com \n60 anos ou mais de idade em relação a um grupo de 100 pessoas de até 14 anos de idade.",
+       caption = "Elaboração: Fábio Rocha", x= "", y = "") +
+  theme(
+    plot.title = element_text(face = "bold", size = 14),
+    plot.subtitle = element_text(face = "italic", lineheight = 1.),  # Ajuste o valor de lineheight conforme necessário
+    plot.caption = element_text(face = "italic", hjust = 0)
+  )
+
+```
