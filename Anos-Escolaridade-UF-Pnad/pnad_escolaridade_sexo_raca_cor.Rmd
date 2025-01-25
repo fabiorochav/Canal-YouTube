@@ -1,1 +1,204 @@
+---
+title: "Pnad - Continua"
+author: "Fábio Rocha"
+date: "`r Sys.Date()`"
+output: pdf_document
+---
+
+# Pacotes necessários
+
+```{r, message=FALSE}
+
+library(tidyverse)
+library(sidrar)
+library(dplyr)
+library(magrittr)
+library(geobr)
+library(sf)
+library(ggthemes)
+
+```
+
+# Dados - Média de anos de estudo estado
+
+```{r, message=FALSE}
+
+dados = get_sidra(api = "/t/7126/n3/all/v/3593/p/last%201/c2/6794/c58/2795/d/v3593%201")
+
+```
+
+```{r, message=FALSE}
+
+dados_selecao = dados %>%
+  select("anos_estudo" = Valor,
+         "uf" = `Unidade da Federação (Código)`,
+         "sexo" = Sexo)
+
+```
+
+```{r, message=FALSE}
+
+br_map_estado <- read_state(code_state = "all", year = 2020)
+br_map_estado$code_state = as.character(br_map_estado$code_state)
+
+# Juntar dados de geometria com dados de peso
+dados_junto <- left_join(br_map_estado,dados_selecao, by = c("code_state" = "uf"))
+
+```
+
+```{r, message=FALSE}
+
+ggplot() +
+  geom_sf(data = dados_junto, aes(fill = anos_estudo), color = "white") +
+  scale_fill_gradient(low = "orange", high = "blue", name = "Média") +
+  geom_sf_label(data = dados_junto, aes(label = anos_estudo), 
+                label.padding = unit(0.5, "mm"), size = 3) + 
+  facet_wrap(~sexo)+# Use the correct label_data
+  theme_minimal() +
+  labs(title = "Média de anos de estudo por estado",
+       subtitle = "Pessoas com 15 anos ou mais",
+       caption = "Dados: PNAD-Continua Anual - 2022 | Elaboração: Fábio Rocha",
+       x = "", 
+       y="")+
+  theme(plot.title = element_text(face = "bold", size = 14),
+    plot.subtitle = element_text(face = "italic"))
+
+```
+
+# Dados - Taxa de analfabetismo por estado para pessoas com 15 anos ou mais por raça/cor
+
+```{r, message=FALSE}
+
+dados = get_sidra(api = "/t/7125/n3/all/v/10267/p/last%201/c86/allxt/c58/2795/d/v10267%201")
+
+```
+
+```{r, message=FALSE}
+
+dados_selecao = dados %>%
+  select("anos_estudo" = Valor,
+         "uf" = `Unidade da Federação (Código)`,
+         "raca_cor" = `Cor ou raça`)
+
+```
+
+```{r, message=FALSE}
+
+br_map_estado <- read_state(code_state = "all", year = 2020)
+br_map_estado$code_state = as.character(br_map_estado$code_state)
+
+# Juntar dados de geometria com dados de peso
+dados_junto <- left_join(br_map_estado,dados_selecao, by = c("code_state" = "uf"))
+
+```
+
+```{r, message=FALSE}
+ggplot() +
+  geom_sf(data = dados_junto, aes(fill = anos_estudo), color = "white") +
+  scale_fill_gradient(low = "orange", high = "blue3", name = "Média") +
+  geom_sf_label(data = dados_junto, aes(label = anos_estudo), 
+                label.padding = unit(0.5, "mm"), size = 3) + 
+  facet_wrap(~raca_cor)+# Use the correct label_data
+  theme_minimal() +
+  labs(title = "Taxa de analfabetistmo por estado e raça/cor",
+       subtitle = "Pessoas com 15 anos ou mais",
+       caption = "Dados: PNAD-Continua Anual - 2022 | Elaboração: Fábio Rocha",
+       x = "", 
+       y="")+
+  theme(plot.title = element_text(face = "bold", size = 14),
+    plot.subtitle = element_text(face = "italic"))
+
+```
+
+
+# Dados - Média de anos de estudo estado para pessoas com 15 anos ou mais por raça/cor
+
+```{r, message=FALSE}
+
+dados = get_sidra(api = "/t/7127/n3/all/v/3593/p/last%201/c86/allxt/c58/2795/d/v3593%201")
+
+```
+
+```{r, message=FALSE}
+
+dados_selecao = dados %>%
+  select("anos_estudo" = Valor,
+         "uf" = `Unidade da Federação (Código)`,
+         "raca_cor" = `Cor ou raça`)
+
+```
+
+```{r, message=FALSE}
+
+br_map_estado <- read_state(code_state = "all", year = 2020)
+br_map_estado$code_state = as.character(br_map_estado$code_state)
+
+# Juntar dados de geometria com dados de peso
+dados_junto <- left_join(br_map_estado,dados_selecao, by = c("code_state" = "uf"))
+
+```
+
+```{r, message=FALSE}
+ggplot() +
+  geom_sf(data = dados_junto, aes(fill = anos_estudo), color = "white") +
+  scale_fill_gradient(low = "orange", high = "blue3", name = "Média") +
+  geom_sf_label(data = dados_junto, aes(label = anos_estudo), 
+                label.padding = unit(0.5, "mm"), size = 3) + 
+  facet_wrap(~raca_cor)+# Use the correct label_data
+  theme_minimal() +
+  labs(title = "Média de anos de estudo por estado e raça/cor",
+       subtitle = "Pessoas com 15 anos ou mais",
+       caption = "Dados: PNAD-Continua Anual - 2022 | Elaboração: Fábio Rocha",
+       x = "", 
+       y="")+
+  theme(plot.title = element_text(face = "bold", size = 14),
+    plot.subtitle = element_text(face = "italic"))
+
+```
+
+# Dados - Média de anos de estudo estado para pessoas com 15 anos ou mais por sexo
+
+```{r, message=FALSE}
+
+dados = get_sidra(api = "/t/7126/n3/all/v/3593/p/last%201/c2/allxt/c58/2795/d/v3593%201")
+
+```
+
+```{r, message=FALSE}
+
+dados_selecao = dados %>%
+  select("anos_estudo" = Valor,
+         "uf" = `Unidade da Federação (Código)`,
+         "sexo" = Sexo)
+
+```
+
+```{r, message=FALSE}
+
+br_map_estado <- read_state(code_state = "all", year = 2020)
+br_map_estado$code_state = as.character(br_map_estado$code_state)
+
+# Juntar dados de geometria com dados de peso
+dados_junto <- left_join(br_map_estado,dados_selecao, by = c("code_state" = "uf"))
+
+```
+
+```{r, message=FALSE}
+
+ggplot() +
+  geom_sf(data = dados_junto, aes(fill = anos_estudo), color = "white") +
+  scale_fill_gradient(low = "orange", high = "blue", name = "Média") +
+  geom_sf_label(data = dados_junto, aes(label = anos_estudo), 
+                label.padding = unit(0.5, "mm"), size = 3) + 
+  facet_wrap(~sexo)+# Use the correct label_data
+  theme_minimal() +
+  labs(title = "Média de anos de estudo por estado e sexo",
+       subtitle = "Pessoas com 15 anos ou mais",
+       caption = "Dados: PNAD-Continua Anual - 2022 | Elaboração: Fábio Rocha",
+       x = "", 
+       y="")+
+  theme(plot.title = element_text(face = "bold", size = 14),
+    plot.subtitle = element_text(face = "italic"))
+
+```
 
