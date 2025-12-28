@@ -1,4 +1,4 @@
-# Renúncia Fiscal por Empresa – Ouro Preto (MG), 2025
+# Renúncia Fiscal por Empresa, 2025
 
 Este repositório apresenta um **exercício de análise e visualização de dados públicos** sobre **renúncia fiscal de tributos federais**, com foco no município de **Ouro Preto (MG)** no ano de **2025**.
 
