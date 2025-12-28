@@ -11,10 +11,11 @@ showtext_auto()
 
 options(scipen = 999)
 
+# dados - https://dados.gov.br/dados/conjuntos-dados/renuncias-fiscais-de-tributos-federais
 dirbi.renuncia <- read.csv("dirbi-renuncia-por-regime-2025.csv")
 
 op = dirbi.renuncia %>% 
-  filter(municipio == "OURO PRETO")
+  filter(municipio == "OURO PRETO") # Escolha seu município
 
 op.selecao = op %>% 
   select(cnpj, nome, cnaePrincipal, periodoApuracao, 
@@ -75,3 +76,4 @@ ggplot(dados_plot,
     axis.text.y = element_text(size = 9),
     plot.caption = element_text(size = 8, hjust = 0)
   )
+
